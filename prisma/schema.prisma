@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id          Int          @id @default(autoincrement())
+  firstname   String
+  lastname    String
+  email       String       @unique
+  password    String
+  role        Role
+  isActive    Boolean
+  createdAt   DateTime
+  cartlines   Cartline[]
+  userratings Userrating[]
+
+  @@map("user")
+}
+
+model Cartline {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  posterId  Int
+  poster    Poster   @relation(fields: [posterId], references: [id])
+  quantity  Int
+  createdAt DateTime
+
+  @@map("cartlines")
+}
+
+model Poster {
+  id              Int              @id @default(autoincrement())
+  name            String
+  slug            String
+  description     String
+  image           String
+  width           Int
+  height          Int
+  price           Float
+  stock           Int
+  createdAt       DateTime
+  updatedAt       DateTime
+  cartlines       Cartline[]
+  userratings     Userrating[]
+  genrePosterRels GenrePosterRel[]
+
+  @@map("posters")
+}
+
+model Userrating {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  posterId  Int
+  poster    Poster   @relation(fields: [posterId], references: [id])
+  numStars  Int
+  createdAt DateTime
+
+  @@map("userratings")
+}
+
+model Genre {
+  id              Int              @id @default(autoincrement())
+  genrePosterRels GenrePosterRel[]
+  title           String
+  slug            String
+  createdAt       DateTime
+  updatedAt       DateTime
+
+  @@map("genres")
+}
+
+model GenrePosterRel {
+  posterId Int
+  poster   Poster @relation(fields: [posterId], references: [id])
+  genreId  Int
+  genre    Genre  @relation(fields: [genreId], references: [id])
+
+  @@id([posterId, genreId]) //composite primary key 
+  @@map("genreposterrels")
+}
