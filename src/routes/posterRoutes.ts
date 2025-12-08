@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getRecords, getRecord, updateRecord, deleteRecord, createRecord } from '../controllers/userController.js';
+import { getRecords, getRecord, createRecord, deleteRecord, updateRecord } from '../controllers/posterController.js';
 const router = Router();
 
 router.get('/', getRecords);
@@ -8,4 +8,4 @@ router.post('/', createRecord);
 router.put('/:id', updateRecord);
 router.delete('/:id', deleteRecord);
 
-export const userRoutes = router;
+export const posterRoutes = router;
