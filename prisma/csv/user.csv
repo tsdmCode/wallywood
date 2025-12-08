@@ -1,0 +1,3 @@
+id,firstname,lastname,email,password,role,isActive,createdAt
+1,Admin,Adminsen,info@wu.dk,password,ADMIN,true,2025-12-08T11:40:16.193Z
+2,John,Doe,test@example.com,password,USER,true,2025-12-08T11:45:16.193Z
