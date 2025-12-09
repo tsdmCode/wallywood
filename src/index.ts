@@ -5,6 +5,7 @@ import { posterRoutes } from './routes/posterRoutes.js';
 import { cartlineRoutes } from './routes/cartlineRoutes.js';
 import { genreRoutes } from './routes/genreRoutes.js';
 import { loginRoutes } from './routes/loginRoutes.js';
+import { authRoutes } from './routes/authRoutes.js';
 
 // Indlæs miljøvariabler fra .env (uden at vise logs)
 dotenv.config({ quiet: true });
@@ -27,6 +28,7 @@ app.use('/api/poster', posterRoutes);
 app.use('/api/cartline', cartlineRoutes);
 app.use('/api/genre', genreRoutes);
 app.use('/api/login', loginRoutes);
+app.use('/api/authorize', authRoutes);
 // Start serveren
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
