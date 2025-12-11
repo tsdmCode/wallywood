@@ -7,11 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
 model User {
   id          Int          @id @default(autoincrement())
   firstname   String
@@ -30,12 +25,14 @@ model User {
 model Cartline {
   id        Int      @id @default(autoincrement())
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
   posterId  Int
-  poster    Poster   @relation(fields: [posterId], references: [id])
   quantity  Int
   createdAt DateTime
+  poster    Poster   @relation(fields: [posterId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
+  @@index([posterId], map: "cartlines_posterId_fkey")
+  @@index([userId], map: "cartlines_userId_fkey")
   @@map("cartlines")
 }
 
@@ -52,8 +49,8 @@ model Poster {
   createdAt       DateTime
   updatedAt       DateTime
   cartlines       Cartline[]
-  userratings     Userrating[]
   genrePosterRels GenrePosterRel[]
+  userratings     Userrating[]
 
   @@map("posters")
 }
@@ -61,32 +58,40 @@ model Poster {
 model Userrating {
   id        Int      @id @default(autoincrement())
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
   posterId  Int
-  poster    Poster   @relation(fields: [posterId], references: [id])
   numStars  Int
   createdAt DateTime
+  poster    Poster   @relation(fields: [posterId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
+  @@index([posterId], map: "userratings_posterId_fkey")
+  @@index([userId], map: "userratings_userId_fkey")
   @@map("userratings")
 }
 
 model Genre {
   id              Int              @id @default(autoincrement())
-  genrePosterRels GenrePosterRel[]
   title           String
   slug            String
   createdAt       DateTime
   updatedAt       DateTime
+  genrePosterRels GenrePosterRel[]
 
   @@map("genres")
 }
 
 model GenrePosterRel {
   posterId Int
-  poster   Poster @relation(fields: [posterId], references: [id])
   genreId  Int
   genre    Genre  @relation(fields: [genreId], references: [id])
+  poster   Poster @relation(fields: [posterId], references: [id])
 
-  @@id([posterId, genreId]) //composite primary key 
+  @@id([posterId, genreId])
+  @@index([genreId], map: "genreposterrels_genreId_fkey")
   @@map("genreposterrels")
+}
+
+enum Role {
+  USER
+  ADMIN
 }

@@ -6,6 +6,7 @@ import { cartlineRoutes } from './routes/cartlineRoutes.js';
 import { genreRoutes } from './routes/genreRoutes.js';
 import { loginRoutes } from './routes/loginRoutes.js';
 import { authRoutes } from './routes/authRoutes.js';
+import { userratingRoutes } from './routes/userratingRoutes.js';
 
 // Indlæs miljøvariabler fra .env (uden at vise logs)
 dotenv.config({ quiet: true });
@@ -29,6 +30,7 @@ app.use('/api/cartline', cartlineRoutes);
 app.use('/api/genre', genreRoutes);
 app.use('/api/login', loginRoutes);
 app.use('/api/authorize', authRoutes);
+app.use('/api/userrating', userratingRoutes);
 // Start serveren
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

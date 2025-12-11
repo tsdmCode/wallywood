@@ -46,7 +46,7 @@ export const fieldTypes: Record<string, Record<string, 'string' | 'number' | 'bo
     createdAt: 'date',
     updatedAt: 'date',
   },
-  genreposterrel: {
+  genrePosterRel: {
     posterId: 'number',
     genreId: 'number',
   },

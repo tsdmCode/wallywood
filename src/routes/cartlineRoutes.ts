@@ -6,8 +6,8 @@ import { authorizeRole } from '../middleware/authorizeRole.js';
 
 router.get('/', getRecords);
 router.get('/:id', getRecord);
-router.post('/', authenticateToken, authorizeRole('ADMIN', 'USER'), createRecord);
-router.put('/:id', authenticateToken, authorizeRole('ADMIN', 'USER'), updateRecord);
-router.delete('/:id', authenticateToken, authorizeRole('ADMIN', 'USER'), deleteRecord);
+router.post('/', authenticateToken, authorizeRole('ADMIN'), createRecord);
+router.put('/:id', authenticateToken, authorizeRole('ADMIN'), updateRecord);
+router.delete('/:id', authenticateToken, authorizeRole('ADMIN'), deleteRecord);
 
 export const cartlineRoutes = router;

@@ -26,6 +26,9 @@ export const getRecord = async (req: Request, res: Response) => {
         slug: true,
         description: true,
         image: true,
+        width: true,
+        height: true,
+        price: true,
       },
     });
     return res.status(201).json(data);
@@ -35,14 +38,53 @@ export const getRecord = async (req: Request, res: Response) => {
   }
 };
 
+export const getPostersByGenre = async (req: Request, res: Response) => {
+  const slug = req.params.slug;
+
+  if (!slug) {
+    return res.status(400).json({ error: 'Genre slug is required' });
+  }
+
+  try {
+    console.log('Looking for genre with slug:', slug);
+
+    const genre = await prisma.genre.findFirst({
+      where: { slug },
+      include: {
+        genrePosterRels: {
+          include: {
+            poster: true,
+          },
+        },
+      },
+    });
+
+    console.log('Found genre:', genre);
+
+    if (!genre) {
+      return res.status(404).json({ error: `Genre with slug '${slug}' not found` });
+    }
+
+    const posters = genre.genrePosterRels.map((rel) => rel.poster);
+
+    console.log('Found posters:', posters.length);
+
+    return res.status(200).json(posters);
+  } catch (error) {
+    console.error('Error in getPostersByGenre:', error);
+    return res.status(500).json({ error: 'Failed to get posters by genre' });
+  }
+};
+
 export const createRecord = async (req: Request, res: Response) => {
-  const { name, slug, description, image, width, height, price, stock } = req.body;
+  const { name, slug, description, image, width, height, price, stock, genreIds } = req.body;
 
   if (!name || !slug || !description || !image || !width || !height || !price || stock === undefined) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
   try {
+    console.log('making poster');
     const data = await prisma.poster.create({
       data: {
         name,
@@ -57,6 +99,19 @@ export const createRecord = async (req: Request, res: Response) => {
         updatedAt: new Date(),
       },
     });
+
+    if (genreIds && Array.isArray(genreIds) && genreIds.length > 0) {
+      console.log('skaber genrer');
+      await prisma.genrePosterRel.createMany({
+        data: genreIds.map((genreId: number) => ({
+          posterId: data.id,
+          genreId: Number(genreId),
+        })),
+      });
+    } else {
+      console.log('No genreIds provided or not an array');
+    }
+
     return res.status(201).json(data);
   } catch (error) {
     console.error(error);
