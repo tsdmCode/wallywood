@@ -29,6 +29,11 @@ export const getRecord = async (req: Request, res: Response) => {
         width: true,
         height: true,
         price: true,
+        genrePosterRels: {
+          select: {
+            genre: true,
+          },
+        },
       },
     });
     return res.status(201).json(data);

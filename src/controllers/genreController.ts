@@ -61,9 +61,9 @@ export const createRecord = async (req: Request, res: Response) => {
 export const updateRecord = async (req: Request, res: Response) => {
   const id = Number(req.params.id);
 
-  const { title, slug, createdAt, updatedAt } = req.body;
+  const { title, slug, updatedAt } = req.body;
 
-  if (!title || !slug || !createdAt || !updatedAt) {
+  if (!title || !slug || !updatedAt) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
@@ -73,7 +73,6 @@ export const updateRecord = async (req: Request, res: Response) => {
       data: {
         title,
         slug,
-        createdAt,
         updatedAt,
       },
     });
